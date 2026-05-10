@@ -9,31 +9,9 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    // public function index()
-    // {
-    //     $products = Product::with('category','brand')->get();
-    //     // $products = \App\Models\Product::with('category','brand')->get();
-
-    //     return response()->json([
-    //         'status'=> true,
-    //         // 'data'=> $products
-    //         'data' => ProductResource::collection($products),
-    //     ]);
-    // }
-
         public function index(Request $request)
     {
         $query = Product::with('category', 'brand');
-        //Search by product name
-        // if($request->has('search')){
-        //     $search = $request->search;
-        //     $query->where('name','like',"%{search}%");
-        // }
-//         if ($request->filled('search')) {
-//     $search = trim($request->search);
-
-//     $query->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
-// }
 if ($request->filled('search')) {
     $search = trim($request->search);
 
@@ -47,21 +25,14 @@ if ($request->filled('search')) {
           });
     });
 }
-            // 🏷 Filter by category
     if ($request->filled('category_id')) {
         $query->where('category_id', $request->category_id);
     }
-
-                //Filter by brand
         if($request->filled('brand_id')){
             $query->where('brand_id', $request->brand_id);
         }
-
-        // 🔃 Sorting
 $sort = $request->get('sort', 'id');     // default sort by id
 $order = $request->get('order', 'asc');  // default asc
-
-// whitelist allowed columns (important for security)
 $allowedSorts = ['id', 'name', 'price'];
 
 if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
@@ -95,7 +66,6 @@ if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
 
         return response()->json([
             'status'=> true,
-            // 'data'=> $product
             'data'=> new ProductResource($product),
         ]);
     }
@@ -118,23 +88,13 @@ if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
 
     return response()->json([
         'status' => true,
-        // 'data' => $product
         'data' => new ProductResource($product)
     ], 201);
 }
 
 public function update(Request $request, $id)
 {
-    // $product = Product::find($id);
     $product = Product::findOrFail($id);
-
-    // if (!$product) {
-    //     return response()->json([
-    //         'status' => false,
-    //         'message' => 'Product not found'
-    //     ], 404);
-    // }
-
     $request->validate([
         'name' => 'required|string',
         'price' => 'required|numeric',
@@ -151,23 +111,13 @@ public function update(Request $request, $id)
 
     return response()->json([
         'status' => true,
-        // 'data' => $product
         'data' => new ProductResource($product)
     ]);
 }
 
 public function destroy($id)
 {
-    // $product = Product::find($id);
     $product = Product::findOrFail($id);
-
-    // if (!$product) {
-    //     return response()->json([
-    //         'status' => false,
-    //         'message' => 'Product not found'
-    //     ], 404);
-    // }
-
     $product->delete();
 
     return response()->json([
