@@ -17,6 +17,7 @@
             <th>Category</th>
             <th>Brand</th>
             <th>Actions</th>
+            <th>Image</th>
         </tr>
     </thead>
 
@@ -40,6 +41,11 @@
             <td>${{ $product->price }}</td>
             <td>{{ $product->category->name ?? '-' }}</td>
             <td>{{ $product->brand->name ?? '-' }}</td>
+            <td>
+    @if($product->image)
+        <img src="{{ asset('storage/' . $product->image) }}" width="60">
+    @endif
+</td>
         </tr>
         @endforeach
     </tbody>

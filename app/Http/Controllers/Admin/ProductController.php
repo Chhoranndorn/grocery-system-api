@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Brand;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -31,13 +32,19 @@ public function store(Request $request)
         'price' => 'required|numeric|min:0',
         'category_id' => 'required|exists:categories,id',
         'brand_id' => 'required|exists:brands,id',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
-
+if ($request->hasFile('image')) {
+    $path = $request->file('image')->store('products', 'public');
+} else {
+    $path = null;
+}
     \App\Models\Product::create([
         'name' => $request->name,
         'price' => $request->price,
         'category_id' => $request->category_id,
         'brand_id' => $request->brand_id,
+        'image' => $path,
     ]);
 
    return redirect('/products')
@@ -59,15 +66,29 @@ public function update(Request $request, $id)
         'price' => 'required|numeric|min:0',
         'category_id' => 'required|exists:categories,id',
         'brand_id' => 'required|exists:brands,id',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
     $product = Product::findOrFail($id);
+
+    if ($request->hasFile('image')) {
+
+    // delete old image
+    if ($product->image && Storage::disk('public')->exists($product->image)) {
+        Storage::disk('public')->delete($product->image);
+    }
+
+    $path = $request->file('image')->store('products', 'public');
+} else {
+    $path = $product->image;
+}
 
     $product->update([
         'name' => $request->name,
         'price' => $request->price,
         'category_id' => $request->category_id,
         'brand_id' => $request->brand_id,
+        'image' => $path,
     ]);
 
     return redirect('/products')->with('success', 'Product updated successfully');
