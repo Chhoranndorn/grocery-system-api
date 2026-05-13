@@ -20,7 +20,11 @@ class ProductResource extends JsonResource
             'name' => $this->name,
             'price' => $this->price,
             'category' => $this->category?->name,
-            'brand' => $this->brand?->name,   
+            'brand' => $this->brand?->name,  
+            // 'image_url' => $this->image ? asset('storage/' . $this->image) : null,
+                        'image' => $this->image 
+    ? asset('storage/' . $this->image)
+    : asset('images/no-image.png'),
         ];
     }
 }

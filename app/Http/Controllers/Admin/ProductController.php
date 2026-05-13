@@ -11,11 +11,32 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+public function index(Request $request)
 {
-    $products = Product::with('category','brand')->latest()->paginate(10);
+    $query = Product::with('category', 'brand');
 
-    return view('admin.products.index', compact('products'));
+    // search
+    if ($request->filled('search')) {
+        $query->where('name', 'like', '%' . $request->search . '%');
+    }
+
+    // filter category
+    if ($request->filled('category_id')) {
+        $query->where('category_id', $request->category_id);
+    }
+
+    // filter brand
+    if ($request->filled('brand_id')) {
+        $query->where('brand_id', $request->brand_id);
+    }
+
+    $products = $query->latest()->paginate(10)->withQueryString();
+
+    // ✅ REQUIRED for dropdowns
+    $categories = Category::all();
+    $brands = Brand::all();
+
+    return view('admin.products.index', compact('products', 'categories', 'brands'));
 }
 
 public function create()
