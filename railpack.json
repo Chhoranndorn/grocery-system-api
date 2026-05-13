@@ -1,6 +1,5 @@
 {
-  "packages": [
-    "php84",
-    "php84Packages.composer"
-  ]
+  "packages": {
+    "php": "8.4"
+  }
 }
