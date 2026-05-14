@@ -12,6 +12,9 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
+# 👇 ADD THIS LINE
+RUN php artisan storage:link
+
 RUN chmod -R 777 storage bootstrap/cache
 
 EXPOSE 8000
