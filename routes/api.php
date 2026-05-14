@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\BrandController;
 //Public
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',[AuthController::class,'login']);
+Route::get('/brands', [BrandController::class, 'index']);        // ✅ ADD
+Route::get('/categories', [CategoryController::class, 'index']); // ✅ ADD
 
 // Protected
 Route::middleware('auth:sanctum')->group(function () {
@@ -19,3 +21,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class)->only(['index','store']);
     Route::apiResource('brands', BrandController::class)->only(['index','store']);
 });
+
