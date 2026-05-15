@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\BrandController;
 //Public
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login',[AuthController::class,'login']);
+Route::get('/products', [ProductController::class, 'index']);
 Route::get('/brands', [BrandController::class, 'index']);        // ✅ ADD
 Route::get('/categories', [CategoryController::class, 'index']); // ✅ ADD
 
