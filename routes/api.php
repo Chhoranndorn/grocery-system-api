@@ -6,20 +6,15 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 
-//Public
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login',[AuthController::class,'login']);
+// Public
 Route::get('/products', [ProductController::class, 'index']);
-Route::get('/brands', [BrandController::class, 'index']);        // ✅ ADD
-Route::get('/categories', [CategoryController::class, 'index']); // ✅ ADD
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/brands', [BrandController::class, 'index']);
 
 // Protected
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class,'logout']);
-    Route::get('/user', [AuthController::class,'user']);
-    Route::apiResource('products', ProductController::class);
-
-    Route::apiResource('categories', CategoryController::class)->only(['index','store']);
-    Route::apiResource('brands', BrandController::class)->only(['index','store']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
 
