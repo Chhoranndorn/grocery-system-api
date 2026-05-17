@@ -12,6 +12,26 @@ Route::get('/products/{id}', [ProductController::class, 'show']);
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/brands', [BrandController::class, 'index']);
 
+Route::get('/banners', function () {
+    return response()->json([
+        'status' => true,
+        'data' => [
+            [
+                'id' => 1,
+                'image' => 'https://picsum.photos/400/200?1',
+            ],
+            [
+                'id' => 2,
+                'image' => 'https://picsum.photos/400/200?2',
+            ],
+            [
+                'id' => 3,
+                'image' => 'https://picsum.photos/400/200?3',
+            ],
+        ]
+    ]);
+});
+
 // Protected
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/products', [ProductController::class, 'store']);
