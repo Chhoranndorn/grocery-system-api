@@ -1,66 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
-    <title>Admin Panel</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>@yield('title') | Grocery Admin</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 </head>
 
-<body>
+<body class="bg-light">
 
-<div class="d-flex">
+    <div class="d-flex">
 
-    <!-- Sidebar -->
-    <div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
-        <h4>Admin</h4>
-        <hr>
+        <!-- Sidebar -->
+        <div class="bg-dark text-white p-3" style="width: 250px; min-height: 100vh;">
 
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a href="/dashboard" class="nav-link text-white">Dashboard</a>
-            </li>
+            <h3 class="mb-4">
+                Grocery Admin
+            </h3>
 
-            <li class="nav-item">
-                <a href="/products" class="nav-link text-white">Products</a>
-            </li>
+            <ul class="nav flex-column">
 
-            <li class="nav-item">
-                <a href="/categories" class="nav-link text-white">Categories</a>
-            </li>
+                <li class="nav-item mb-2">
+                    <a href="/dashboard"
+                        class="nav-link text-white {{ request()->is('dashboard') ? 'bg-secondary rounded' : '' }}">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
 
-            <li class="nav-item">
-                <a href="/brands" class="nav-link text-white">Brands</a>
-            </li>
-        </ul>
-    </div>
+                <li class="nav-item mb-2">
+                    <a href="/products"
+                        class="nav-link text-white {{ request()->is('products*') ? 'bg-secondary rounded' : '' }}">
+                        <i class="bi bi-box-seam me-2"></i>
+                        Products
+                    </a>
+                </li>
 
-    <!-- Main Content -->
-    <div class="flex-grow-1">
+                <li class="nav-item mb-2">
+                    <a href="/categories"
+                        class="nav-link text-white {{ request()->is('categories*') ? 'bg-secondary rounded' : '' }}">
+                        <i class="bi bi-tags me-2"></i>
+                        Categories
+                    </a>
+                </li>
 
-        <!-- Topbar -->
-        <nav class="navbar navbar-light bg-light px-3">
-            <span class="navbar-brand">Admin Panel</span>
+                <li class="nav-item mb-2">
+                    <a href="/brands"
+                        class="nav-link text-white {{ request()->is('brands*') ? 'bg-secondary rounded' : '' }}">
+                        <i class="bi bi-award me-2"></i>
+                        Brands
+                    </a>
+                </li>
 
-            <form method="POST" action="/logout">
-                @csrf
-                <button class="btn btn-danger btn-sm">Logout</button>
-            </form>
-        </nav>
+            </ul>
 
-        <!-- Page Content -->
-        <div class="p-4">
-            @if(session('success'))
-    <div class="alert alert-success m-3">
-        {{ session('success') }}
-    </div>
-@endif
-            @yield('content')
+        </div>
+
+        <!-- Main -->
+        <div class="flex-grow-1">
+
+            <!-- Navbar -->
+            <nav class="navbar navbar-light bg-white shadow-sm px-4 py-3">
+
+                <div class="d-flex justify-content-between align-items-center w-100">
+
+                    <!-- Page Title -->
+                    <h4 class="mb-0">
+                        @yield('title')
+                    </h4>
+
+                    <!-- Right Side -->
+                    <div class="d-flex align-items-center gap-3">
+
+                        <span class="text-muted">
+                            Welcome, {{ auth()->user()->name }}
+                        </span>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="bi bi-box-arrow-right me-1"></i>
+                                Logout
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </nav>
+
+            <!-- Content -->
+            <div class="p-4">
+
+                @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+                @endif
+
+                @yield('content')
+
+            </div>
+
         </div>
 
     </div>
 
-</div>
-
 </body>
+
 </html>

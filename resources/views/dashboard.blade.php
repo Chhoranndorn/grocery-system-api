@@ -1,143 +1,81 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+@extends('layouts.admin')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+@section('title', 'Dashboard')
 
-    <title>Dashboard</title>
+@section('content')
 
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<div class="row">
 
-    <!-- Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-        }
-    </style>
-</head>
+            <div class="card-body">
 
-<body class="bg-gray-100">
+                <h6 class="text-muted">
+                    Total Products
+                </h6>
 
-    <div class="flex min-h-screen">
-
-        <!-- Sidebar -->
-        <aside class="w-64 bg-green-600 text-white p-6">
-
-            <div class="mb-10">
-                <h1 class="text-2xl font-bold">
-                    Grocery Admin
-                </h1>
-            </div>
-
-            <nav class="space-y-3">
-
-                <a href="/dashboard"
-                    class="block px-4 py-3 rounded-xl bg-green-700 hover:bg-green-800 transition">
-                    Dashboard
-                </a>
-
-                <a href="/products"
-                    class="block px-4 py-3 rounded-xl hover:bg-green-700 transition">
-                    Products
-                </a>
-
-                <a href="/categories"
-                    class="block px-4 py-3 rounded-xl hover:bg-green-700 transition">
-                    Categories
-                </a>
-
-                <a href="/brands"
-                    class="block px-4 py-3 rounded-xl hover:bg-green-700 transition">
-                    Brands
-                </a>
-
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <button type="submit"
-                        class="w-full text-left px-4 py-3 rounded-xl hover:bg-red-500 transition mt-10">
-                        Logout
-                    </button>
-                </form>
-
-            </nav>
-
-        </aside>
-
-        <!-- Main Content -->
-        <main class="flex-1 p-8">
-
-            <!-- Header -->
-            <div class="mb-8">
-
-                <h2 class="text-3xl font-bold text-gray-800">
-                    Dashboard
+                <h2 class="text-primary">
+                    {{ $productCount }}
                 </h2>
 
-                <p class="text-gray-500 mt-2">
-                    Welcome back 👋
-                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    Categories
+                </h6>
+
+                <h2 class="text-success">
+                    {{ $categoryCount }}
+                </h2>
 
             </div>
 
-            <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        </div>
+    </div>
 
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h3 class="text-gray-500 text-sm">
-                        Total Products
-                    </h3>
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
 
-                    <p class="text-3xl font-bold text-green-600 mt-2">
-                        120
-                    </p>
-                </div>
+            <div class="card-body">
 
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h3 class="text-gray-500 text-sm">
-                        Categories
-                    </h3>
+                <h6 class="text-muted">
+                    Brands
+                </h6>
 
-                    <p class="text-3xl font-bold text-blue-600 mt-2">
-                        12
-                    </p>
-                </div>
-
-                <div class="bg-white rounded-2xl shadow p-6">
-                    <h3 class="text-gray-500 text-sm">
-                        Brands
-                    </h3>
-
-                    <p class="text-3xl font-bold text-orange-500 mt-2">
-                        8
-                    </p>
-                </div>
+                <h2 class="text-warning">
+                    {{ $brandCount }}
+                </h2>
 
             </div>
 
-            <!-- Recent Activity -->
-            <div class="bg-white rounded-2xl shadow p-6 mt-8">
+        </div>
+    </div>
 
-                <h3 class="text-xl font-semibold mb-4">
-                    Recent Activity
-                </h3>
+</div>
 
-                <p class="text-gray-500">
-                    Your grocery admin dashboard is running successfully.
-                </p>
+<div class="card border-0 shadow-sm">
 
-            </div>
+    <div class="card-body">
 
-        </main>
+        <h5 class="mb-3">
+            Recent Activity
+        </h5>
+
+        <p class="text-muted mb-0">
+            Your grocery admin dashboard is running successfully.
+        </p>
 
     </div>
 
-</body>
+</div>
 
-</html>
+@endsection
