@@ -22,9 +22,7 @@ class ProductResource extends JsonResource
             'category' => $this->category?->name,
             'brand' => $this->brand?->name,
             // 'image_url' => $this->image ? asset('storage/' . $this->image) : null,
-            'image' => $this->image
-                ? $this->image
-                : 'https://picsum.photos/200?random=' . $this->id,
+            'image' => 'https://source.unsplash.com/300x300/?grocery,' . urlencode($this->name),
         ];
     }
 }
