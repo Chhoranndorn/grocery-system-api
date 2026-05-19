@@ -16,15 +16,15 @@ class ProductResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
-           'id' => $this->id,
+            'id' => $this->id,
             'name' => $this->name,
             'price' => $this->price,
             'category' => $this->category?->name,
-            'brand' => $this->brand?->name,  
+            'brand' => $this->brand?->name,
             // 'image_url' => $this->image ? asset('storage/' . $this->image) : null,
-                        'image' => $this->image 
-    ? asset('storage/' . $this->image)
-    : asset('images/no-image.png'),
+            'image' => $this->image
+                ? $this->image
+                : 'https://picsum.photos/200?random=' . $this->id,
         ];
     }
 }
