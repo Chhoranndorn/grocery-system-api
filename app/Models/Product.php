@@ -12,7 +12,9 @@ class Product extends Model
         'price',
         'category_id',
         'brand_id',
-        'image'
+        'image',
+        'is_exclusive_offer',
+        'is_best_selling',
     ];
 
     protected $casts = [
@@ -22,7 +24,7 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
-        public function brand()
+    public function brand()
     {
         return $this->belongsTo(Brand::class);
     }

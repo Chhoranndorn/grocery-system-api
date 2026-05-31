@@ -9,42 +9,42 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-        public function index(Request $request)
+    public function index(Request $request)
     {
         $query = Product::with('category', 'brand');
-if ($request->filled('search')) {
-    $search = trim($request->search);
+        if ($request->filled('search')) {
+            $search = trim($request->search);
 
-    $query->where(function ($q) use ($search) {
-        $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
-          ->orWhereHas('category', function ($q2) use ($search) {
-              $q2->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
-          })
-          ->orWhereHas('brand', function ($q3) use ($search) {
-              $q3->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
-          });
-    });
-}
-    if ($request->filled('category_id')) {
-        $query->where('category_id', $request->category_id);
-    }
-        if($request->filled('brand_id')){
+            $query->where(function ($q) use ($search) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%'])
+                    ->orWhereHas('category', function ($q2) use ($search) {
+                        $q2->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
+                    })
+                    ->orWhereHas('brand', function ($q3) use ($search) {
+                        $q3->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($search) . '%']);
+                    });
+            });
+        }
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->category_id);
+        }
+        if ($request->filled('brand_id')) {
             $query->where('brand_id', $request->brand_id);
         }
-$sort = $request->get('sort', 'id');     // default sort by id
-$order = $request->get('order', 'asc');  // default asc
-$allowedSorts = ['id', 'name', 'price'];
+        $sort = $request->get('sort', 'id');     // default sort by id
+        $order = $request->get('order', 'asc');  // default asc
+        $allowedSorts = ['id', 'name', 'price'];
 
-if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
-    $query->orderBy($sort, $order);
-}
+        if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
+            $query->orderBy($sort, $order);
+        }
         $perPage = $request->get('per_page', 5);
         $products = $query->paginate($perPage);
 
         return response()->json([
-            'status'=> true,
+            'status' => true,
             'data' => ProductResource::collection($products),
-            'meta'=> [
+            'meta' => [
                 'current_page' => $products->currentPage(),
                 'last_page' => $products->lastPage(),
                 'per_page' => $products->perPage(),
@@ -55,75 +55,109 @@ if (in_array($sort, $allowedSorts) && in_array($order, ['asc', 'desc'])) {
 
     public function show($id)
     {
-        $product = Product::with('category','brand')->find($id);
+        $product = Product::with('category', 'brand')->find($id);
 
-        if(!$product){
+        if (!$product) {
             return response()->json([
                 'status' => false,
-                'message'=> 'Product not found'
+                'message' => 'Product not found'
             ], 404);
         }
 
         return response()->json([
-            'status'=> true,
-            'data'=> new ProductResource($product),
+            'status' => true,
+            'data' => new ProductResource($product),
         ]);
     }
 
     public function store(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string',
-        'price' => 'required|numeric',
-        'category_id' => 'required|exists:categories,id',
-        'brand_id' => 'required|exists:brands,id',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+        ]);
 
-    $product = Product::create([
-        'name' => $request->name,
-        'price' => $request->price,
-        'category_id' => $request->category_id,
-        'brand_id' => $request->brand_id,
-    ]);
+        $product = Product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
+        ]);
 
-    return response()->json([
-        'status' => true,
-        'data' => new ProductResource($product)
-    ], 201);
-}
+        return response()->json([
+            'status' => true,
+            'data' => new ProductResource($product)
+        ], 201);
+    }
 
-public function update(Request $request, $id)
-{
-    $product = Product::findOrFail($id);
-    $request->validate([
-        'name' => 'required|string',
-        'price' => 'required|numeric',
-        'category_id' => 'required|exists:categories,id',
-        'brand_id' => 'required|exists:brands,id',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $product = Product::findOrFail($id);
+        $request->validate([
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+        ]);
 
-    $product->update([
-        'name' => $request->name,
-        'price' => $request->price,
-        'category_id' => $request->category_id,
-        'brand_id' => $request->brand_id,
-    ]);
+        $product->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
+        ]);
 
-    return response()->json([
-        'status' => true,
-        'data' => new ProductResource($product)
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'data' => new ProductResource($product)
+        ]);
+    }
 
-public function destroy($id)
-{
-    $product = Product::findOrFail($id);
-    $product->delete();
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
 
-    return response()->json([
-        'status' => true,
-        'message' => 'Product deleted successfully'
-    ]);
-}
+        return response()->json([
+            'status' => true,
+            'message' => 'Product deleted successfully'
+        ]);
+    }
+    public function exclusiveOffer(Request $request)
+    {
+        $products = Product::with('category', 'brand')
+            ->where('is_exclusive_offer', true)
+            ->paginate($request->get('per_page', 10));
 
+        return response()->json([
+            'status' => true,
+            'data' => ProductResource::collection($products),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ]
+        ]);
+    }
+
+    public function bestSelling(Request $request)
+    {
+        $products = Product::with('category', 'brand')
+            ->where('is_best_selling', true)
+            ->paginate($request->get('per_page', 10));
+
+        return response()->json([
+            'status' => true,
+            'data' => ProductResource::collection($products),
+            'meta' => [
+                'current_page' => $products->currentPage(),
+                'last_page' => $products->lastPage(),
+                'per_page' => $products->perPage(),
+                'total' => $products->total(),
+            ]
+        ]);
+    }
 }
